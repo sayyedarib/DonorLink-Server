@@ -33,7 +33,7 @@ module.exports = async function sendMail({ email, subject, message,phone, queryM
       }
   
       .header-content {
-        background-color: #845ec2;
+        background-color: #4F46E5;
         color: white;
         padding: 20px;
         text-align: center;
@@ -81,7 +81,7 @@ module.exports = async function sendMail({ email, subject, message,phone, queryM
       </div>
       <div class="footer-content">
         <p>Thank you for being a valued member of our community.</p>
-        <p>&copy; 2023 Our Company. All rights reserved.</p>
+        <p>&copy; 2023 DonorLink. All rights reserved.</p>
       </div>
     </div>
   </body>

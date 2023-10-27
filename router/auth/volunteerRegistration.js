@@ -7,10 +7,11 @@ const crypto = require("crypto");
 router.post("/", async (req, res) => {
   try {
     const { picture, name, email, password, cpassword, phone, bio, address, coordinates } = req.body;
+    console.log("finding volunteer with email ", email)
     const response = await volunteerData.findOne({ email: email });
     if (response) {
-      console.log("email already exists");
-      return res.status(409).send({ message: "email already exists" });
+      console.log("volunteer email already exists");
+      return res.status(409).send({ message: "volunteer email already exists" });
     }
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
     const hashPassword = await bcrypt.hash(password, salt);
@@ -19,6 +20,8 @@ router.post("/", async (req, res) => {
       salt
     );
     const verifyToken = crypto.randomBytes(64).toString("hex");
+
+    console.log("creating new volunteer");
     const data = new volunteerData({
       picture,
       name,
@@ -47,9 +50,13 @@ router.post("/", async (req, res) => {
       <p>The DonorLink Team</p>
       `;
 
+      console.log("sending verification mail to volunteer now...")
     await sendMail({ email, name, subject: "Thank you for joining DonorLink", message: messageVolunteer });
-    await data.save();
+    console.log("verification mail sent to volunteer successfully")
+    console.log("saving volunteer data now...");
 
+    await data.save();
+console.log("volunteer data saved successfully");
     res.status(200).json({ message: "volunteer data saved successfully." });
   } catch (err) {
     console.log("got an error while volunteer registration", err);

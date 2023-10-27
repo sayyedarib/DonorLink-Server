@@ -6,10 +6,13 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
 router.post("/", async (req, res) => {
+    console.log("trying to register user")
     try {
         const { type, name, email, password, cpassword, phone, picture, bio, address, coordinates } = req.body;
+        console.log("finding uer with email ", email);
         const response = await profileModel.findOne({ email: email });
         if (response) {
+            console.log("email already exists");
             return res.status(409).send({ message: "email already exists" });
         }
         const salt = await bcrypt.genSalt(Number(process.env.SALT));
@@ -18,6 +21,7 @@ router.post("/", async (req, res) => {
             cpassword,
             salt
         );
+        console.log("creating new user");
         const newUser = new profileModel({
             type,
             name,
@@ -30,8 +34,9 @@ router.post("/", async (req, res) => {
             address,
             coordinates,
         });
+        console.log("saving new user")
         await newUser.save();
-
+        console.log("user saved successfully");
         if (type == "volunteer") {
             const verifyToken = crypto.randomBytes(64).toString("hex");
             const newVolunteer = new volunteerModel({
@@ -54,7 +59,7 @@ router.post("/", async (req, res) => {
             <p>Best regards,</p>
             <p>The DonorLink Team</p>
             `;
-
+            console.log("sending mail to ", email);
             await sendMail({ email, name, subject: "Thank you for joining DonorLink", message: messageVolunteer });
             await newVolunteer.save();
         }

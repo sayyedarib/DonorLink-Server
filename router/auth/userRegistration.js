@@ -6,46 +6,53 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
 router.post("/", async (req, res) => {
-    console.log("trying to register user")
-    try {
-        const { type, name, email, password, cpassword, phone, picture, bio, address, coordinates } = req.body;
-        console.log("finding uer with email ", email);
-        const response = await profileModel.findOne({ email: email });
-        if (response) {
-            console.log("email already exists");
-            return res.status(409).send({ message: "email already exists" });
-        }
-        const salt = await bcrypt.genSalt(Number(process.env.SALT));
-        const hashPassword = await bcrypt.hash(password, salt);
-        const hashConfirmPassword = await bcrypt.hash(
-            cpassword,
-            salt
-        );
-        console.log("creating new user");
-        const newUser = new profileModel({
-            type,
-            name,
-            email,
-            password: hashPassword,
-            cpassword: hashConfirmPassword,
-            phone,
-            picture,
-            bio,
-            address,
-            coordinates,
-        });
-        console.log("saving new user")
-        await newUser.save();
-        console.log("user saved successfully");
-        if (type == "volunteer") {
-            const verifyToken = crypto.randomBytes(64).toString("hex");
-            const newVolunteer = new volunteerModel({
-                profile: newUser._id,
-                verifyToken
-            });
+  console.log("trying to register user");
+  try {
+    const {
+      type,
+      name,
+      email,
+      password,
+      cpassword,
+      phone,
+      picture,
+      bio,
+      address,
+      coordinates,
+    } = req.body;
+    console.log("finding uer with email ", email);
+    const response = await profileModel.findOne({ email: email });
+    if (response) {
+      console.log("email already exists");
+      return res.status(409).send({ message: "email already exists" });
+    }
+    const salt = await bcrypt.genSalt(Number(process.env.SALT));
+    const hashPassword = await bcrypt.hash(password, salt);
+    const hashConfirmPassword = await bcrypt.hash(cpassword, salt);
+    console.log("creating new user");
+    const newUser = new profileModel({
+      type,
+      name,
+      email,
+      password: hashPassword,
+      cpassword: hashConfirmPassword,
+      phone,
+      picture,
+      bio,
+      address,
+      coordinates,
+    });
+    console.log("saving new user");
+    await newUser.save();
+    console.log("user saved successfully");
+    if (type == "volunteer") {
+      const verifyToken = crypto.randomBytes(64).toString("hex");
+      const newVolunteer = new volunteerModel({
+        profile: newUser._id,
+        verifyToken,
+      });
 
-
-            const messageVolunteer = `
+      const messageVolunteer = `
             <p><strong>Dear ${name},</strong></p>
             
             <p>Thank you for joining DonorLink as a volunteer! We are thrilled to have you on board and appreciate your commitment to making a positive impact in our community.
@@ -59,16 +66,21 @@ router.post("/", async (req, res) => {
             <p>Best regards,</p>
             <p>The DonorLink Team</p>
             `;
-            console.log("sending mail to ", email);
-            await sendMail({ email, name, subject: "Thank you for joining DonorLink", message: messageVolunteer });
-            await newVolunteer.save();
-        }
-
-        res.status(200).json({ message: "user data saved successfully." });
-    } catch (err) {
-        console.log("got an error while user registration", err);
-        res.status(500).json({ message: "got an error while user registration " })
+      console.log("sending mail to ", email);
+      await sendMail({
+        email,
+        name,
+        subject: "Thank you for joining DonorLink",
+        message: messageVolunteer,
+      });
+      await newVolunteer.save();
     }
+
+    res.status(200).json({ message: "user data saved successfully." });
+  } catch (err) {
+    console.log("got an error while user registration", err);
+    res.status(500).json({ message: "got an error while user registration " });
+  }
 });
 
 module.exports = router;

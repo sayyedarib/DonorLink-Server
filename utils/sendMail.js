@@ -1,7 +1,14 @@
 const nodemailer = require("nodemailer");
 const emailConfig = require("../config/nodemailer");
 
-module.exports = async function sendMail({ email, subject, message,phone, queryMail, environment = process.env.NODE_ENV }) {
+module.exports = async function sendMail({
+  email,
+  subject,
+  message,
+  phone,
+  queryMail,
+  environment = process.env.NODE_ENV,
+}) {
   console.log("creatigng transporter");
   let transporter = nodemailer.createTransport({
     host: emailConfig?.smtpHost,
@@ -88,18 +95,19 @@ module.exports = async function sendMail({ email, subject, message,phone, queryM
   </html>
   
   `;
-  console.log("sending mail now...")
-  transporter.sendMail({
-    from: "contact.donorlink@gmail.com",
-    to: email,
-    subject: `DonorLink - ${subject}`,
-    html: html
-  }, (err, info) => {
-    if (err) {
-      console.log(`Error occured while sending mail ${err}`);
-      res.status(500).send("Error Occured");
-    }
-    else
-      res.status(200).send("Mail Sent Successfully");
-  });
+  console.log("sending mail now...");
+  await transporter.sendMail(
+    {
+      from: "contact.donorlink@gmail.com",
+      to: email,
+      subject: `DonorLink - ${subject}`,
+      html: html,
+    },
+    (err, info) => {
+      if (err) {
+        console.log(`Error occured while sending mail ${err}`);
+        res.status(500).send("Error Occured");
+      } else res.status(200).send("Mail Sent Successfully");
+    },
+  );
 };

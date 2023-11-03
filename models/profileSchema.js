@@ -1,44 +1,45 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-
-const profileSchema = mongoose.Schema({
+const profileSchema = mongoose.Schema(
+  {
     type: {
-        type: String
+      type: String,
     },
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     password: {
-        type: String,
+      type: String,
     },
     cpassword: {
-        type: String,
+      type: String,
     },
     phone: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     picture: {
-        type: String,
+      type: String,
     },
     bio: {
-        type: String,
+      type: String,
     },
     address: {
-        custom: { type: String, required: false },
-        city: { type: String, required: false },
-        zip: { type: String, required: false }
+      custom: { type: String, required: false },
+      city: { type: String, required: false },
+      zip: { type: String, required: false },
     },
     coordinates: {
-        type: String,
-        required: false
-    }
-}, { collection: "profileData" });
-
+      type: String,
+      required: false,
+    },
+  },
+  { collection: "profileData" },
+);
 
 module.exports = mongoose.model("profileModel", profileSchema);

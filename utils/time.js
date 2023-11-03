@@ -1,5 +1,3 @@
-
-
 module.exports = function time() {
   const currentDate = new Date();
 
@@ -9,8 +7,9 @@ module.exports = function time() {
   const amOrPm = hours >= 12 ? "PM" : "AM";
   hours %= 12;
   hours = hours || 12;
-  const formattedTime = `${hours}:${minutes < 10 ? "0" + minutes : minutes
-    } ${amOrPm}`;
+  const formattedTime = `${hours}:${
+    minutes < 10 ? "0" + minutes : minutes
+  } ${amOrPm}`;
 
   // Get the date in desired format
   const day = currentDate.getDate();
@@ -21,4 +20,4 @@ module.exports = function time() {
   // Combine the time and date
   const time = `${formattedTime} ${formattedDate}`;
   return time;
-}
+};

@@ -1,30 +1,32 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const clothDonationSchema = mongoose.Schema({
+const clothDonationSchema = mongoose.Schema(
+  {
     profile: {
-        type: Schema.Types.ObjectId,
-        ref: 'profileModel'
+      type: Schema.Types.ObjectId,
+      ref: "profileModel",
     },
     quantity: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     message: {
-        type: String,
+      type: String,
     },
     timing: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     nearestVolunteers: {
-        type: Array,
+      type: Array,
     },
     assignedVolunteer: {
-        type: Number,
-        default:0
-    }
-}, { collection: "clothDonationData" });
-
+      type: Number,
+      default: 0,
+    },
+  },
+  { collection: "clothDonationData" },
+);
 
 module.exports = mongoose.model("clothDonationData", clothDonationSchema);

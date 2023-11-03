@@ -9,16 +9,16 @@ router.post("/", async (req, res) => {
   // Create a new Date object
   const { id, bloodGroup, message } = req.body;
   const timing = time();
-  const {_id,name, email} = await profileModel.findById({_id:id});
+  const { _id, name, email } = await profileModel.findById({ _id: id });
   console.log("donors email ", _id);
   const response = await bloodDonation.findOne({ profile: _id });
   if (response) {
-    res.status(409).send({ message: "you arleardy registered as blood donor" })
+    res.status(409).send({ message: "you arleardy registered as blood donor" });
   }
 
   try {
     const data = await new bloodDonation({
-      profile:_id,
+      profile: _id,
       bloodGroup,
       message,
       timing,
@@ -40,14 +40,19 @@ router.post("/", async (req, res) => {
     `;
 
     console.log("SR-router-blood: sending mail ");
-    await sendMail({ email, name, subject: "Register as Blood Donor", message: messageDonor });
+    await sendMail({
+      email,
+      name,
+      subject: "Register as Blood Donor",
+      message: messageDonor,
+    });
 
     await data.save();
     res.status(200).json("done");
   } catch (err) {
     console.log(
       "got an error while posting blood donation data to database ",
-      err
+      err,
     );
   }
 });

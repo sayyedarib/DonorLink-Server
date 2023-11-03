@@ -1,24 +1,26 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const bloodDonationSchema = mongoose.Schema({
+const bloodDonationSchema = mongoose.Schema(
+  {
     profile: {
-        type: Schema.Types.ObjectId,
-        ref: 'profileModel'
-      },
+      type: Schema.Types.ObjectId,
+      ref: "profileModel",
+    },
     bloodGroup: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     message: {
-        type: String,
-        required: false
+      type: String,
+      required: false,
     },
     timing: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-}, { collection: "bloodDonationData" });
-
+  },
+  { collection: "bloodDonationData" },
+);
 
 module.exports = mongoose.model("bloodDonationData", bloodDonationSchema);

@@ -6,8 +6,8 @@ const emailConfig = {
     smtpPort: 587,
     smtpSecure: false,
     auth: {
-      user: 'kaelyn.rodriguez@ethereal.email',
-      pass: '5w3dSkuKT1XrxMBGEY',
+      user: "kaelyn.rodriguez@ethereal.email",
+      pass: "5w3dSkuKT1XrxMBGEY",
     },
   },
   prod: {
@@ -16,14 +16,11 @@ const emailConfig = {
     smtpSecure: true,
     auth: {
       type: "OAuth2",
-      user: "contact.donorlink@gmail.com",
-      clientId:
-        process.env.OAUTH_CLIENT_ID,
+      user: "sayyedaribhussain4321@gmail.com",
+      clientId: process.env.OAUTH_CLIENT_ID,
       clientSecret: process.env.OAUTH_CLIENT_SECRET,
-      refreshToken:
-        process.env.OAUTH_REFRESH_TOKEN,
-      accessToken:
-        process.env.OAUTH_ACCESS_TOKEN,
+      refreshToken: process.env.OAUTH_REFRESH_TOKEN,
+      accessToken: process.env.OAUTH_ACCESS_TOKEN,
     },
   },
 };

@@ -15,7 +15,13 @@ router.post("/", async (req, res) => {
   const { type, name, email, phone, address, coordinates } = donorsProfileData;
   const nearestVolunteer = await findNearest(coordinates, "volunteer");
   // console.log("nearestVolunteer", nearestVolunteer);
-  if (type == "volunteer") { res.status(409).send({ message: "you are volunteer ,sumbit your donations directly to storage" }) };
+  if (type == "volunteer") {
+    res
+      .status(409)
+      .send({
+        message: "you are volunteer ,sumbit your donations directly to storage",
+      });
+  }
 
   try {
     const data = new clothDonationModel({
@@ -26,7 +32,10 @@ router.post("/", async (req, res) => {
       nearestVolunteers: nearestVolunteer,
     });
     console.log("cloth donation data ", data);
-    console.log("nearestVolunteer[0].volunteer._id ", nearestVolunteer[0].volunteer._id);
+    console.log(
+      "nearestVolunteer[0].volunteer._id ",
+      nearestVolunteer[0].volunteer._id,
+    );
     await volunteerModel.findOneAndUpdate(
       { profile: nearestVolunteer[0].volunteer._id },
       { $push: { works: { workDetails: data._id } } },
@@ -35,7 +44,6 @@ router.post("/", async (req, res) => {
     console.log("SR-router-cloth: sending mail ");
 
     await data.save();
-
 
     const messageVolunteer = `
     <p><strong>Dear ${nearestVolunteer[0].volunteer.name},</strong></p>
@@ -63,8 +71,6 @@ router.post("/", async (req, res) => {
     <p><strong>The DonorLink Team</strong></p>
   `;
 
-
-
     const messageDonor = `
       <p>Dear <strong>${name}</strong>,</p>
       <p>Thank you for donating ${quantity} cloth(s) through DonorLink. Your contribution will make a difference in someone's life.</p>
@@ -79,14 +85,23 @@ router.post("/", async (req, res) => {
       <p><strong>The DonorLink Team</strong></p>
     `;
 
-
-    await sendMail({ email: nearestVolunteer[0].volunteer.email, name, subject: "Cloth Donation alert", message: messageVolunteer });
-    await sendMail({ email, name, subject: "Thanks Message", message: messageDonor });
+    await sendMail({
+      email: nearestVolunteer[0].volunteer.email,
+      name,
+      subject: "Cloth Donation alert",
+      message: messageVolunteer,
+    });
+    await sendMail({
+      email,
+      name,
+      subject: "Thanks Message",
+      message: messageDonor,
+    });
     res.status(200).send({ message: "Thank you for donating cloth." });
   } catch (err) {
     console.log(
       "SR: got an error while posting cloth donation data to database ",
-      err
+      err,
     );
   }
 });
